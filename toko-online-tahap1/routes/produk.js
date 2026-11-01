@@ -23,9 +23,9 @@ const URUT = {
 };
 
 // Katalog: cari nama, filter kategori, filter harga, urutkan
-router.get('/produk', async (req, res) => {
+router.get(['/produk', '/kategori/:kategori'], async (req, res) => {
   const q = (req.query.q || '').trim();
-  const kat = (req.query.kategori || '').trim();
+  const kat = (req.params.kategori || req.query.kategori || '').trim();
   const angka = (v) => { const n = parseInt(v, 10); return Number.isInteger(n) && n >= 0 ? n : null; };
   const min = angka(req.query.min);
   const max = angka(req.query.max);

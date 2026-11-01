@@ -1,5 +1,12 @@
 <%- include('partials/header') %>
-<section class="sampul">
+<% const foto = toko.sampul ? String(toko.sampul) : ''; %>
+<style>
+  /* Gambar sampul: diatur dari info-toko.js (sampul, sampulGelap) */
+  .sampul.ada-foto { background: linear-gradient(90deg, rgb(11 11 11 / calc(var(--gelap) * 1.1)) 0%, rgb(11 11 11 / calc(var(--gelap) * .55)) 55%, rgb(11 11 11 / calc(var(--gelap) * .2)) 100%), var(--foto) center / cover no-repeat; }
+  .sampul.ada-foto::before, .sampul.ada-foto .raksasa { display: none; }
+  @media (max-width: 767.98px) { .sampul.ada-foto { background: linear-gradient(0deg, rgb(11 11 11 / var(--gelap)), rgb(11 11 11 / calc(var(--gelap) * .6))), var(--foto) center / cover no-repeat; } }
+</style>
+<section class="sampul<%= foto ? ' ada-foto' : '' %>"<% if (foto) { %> style="--foto: url('/img/<%= encodeURIComponent(foto) %>'); --gelap: <%= Number(toko.sampulGelap) || 0.8 %>;"<% } %>>
   <span class="raksasa" id="raksasa" aria-hidden="true"><%= toko.nama %></span>
   <div class="container sampul-isi">
     <span class="kicker">Koleksi baru</span>

@@ -1,10 +1,14 @@
 <%- include('../partials/header') %>
 <% const dasar = { q, kategori: kat, min, max, urut };
-   const link = (o = {}) => '/produk?' + new URLSearchParams(Object.fromEntries(
-     Object.entries({ ...dasar, ...o }).filter(([k, v]) => v !== '' && v !== null && !(k === 'urut' && v === 'terbaru')))); %>
+   const link = (o = {}) => {
+     const p = { ...dasar, ...o };
+     const kt = p.kategori; delete p.kategori;
+     const qs = new URLSearchParams(Object.fromEntries(Object.entries(p).filter(([k, v]) => v !== '' && v !== null && !(k === 'urut' && v === 'terbaru')))).toString();
+     return (kt ? '/kategori/' + encodeURIComponent(kt) : '/produk') + (qs ? '?' + qs : '');
+   }; %>
 <section class="container katalog">
   <h1>Produk</h1>
-  <form class="saring-produk" method="get" action="/produk" role="search">
+  <form class="saring-produk" method="get" action="<%= kat ? '/kategori/' + encodeURIComponent(kat) : '/produk' %>" role="search">
     <div class="kolom-cari">
       <label for="q" class="form-label">Cari produk</label>
       <input id="q" type="search" name="q" value="<%= q %>" class="form-control" placeholder="Nama produk">
@@ -26,8 +30,7 @@
         <option value="rating" <%= urut === 'rating' ? 'selected' : '' %>>Rating tertinggi</option>
       </select>
     </div>
-    <% if (kat) { %><input type="hidden" name="kategori" value="<%= kat %>"><% } %>
-    <div class="align-self-end"><button class="btn btn-mentari">Terapkan</button></div>
+        <div class="align-self-end"><button class="btn btn-mentari">Terapkan</button></div>
   </form>
 
   <% if (kategori.length) { %>

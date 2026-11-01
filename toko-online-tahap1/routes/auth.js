@@ -5,6 +5,8 @@ const { guestOnly } = require('../middleware/auth');
 const { unggahAvatar, hapusAvatar } = require('../middleware/avatar');
 
 const router = express.Router();
+// Alamat login tambahan selain /login. Ubah lewat info-toko.js (jalurLogin: ['/masuk.php']) bila perlu.
+const JALUR_LOGIN = ['/login', ...(require('../info-toko').jalurLogin || ['/wp-login.php'])];
 
 router.get('/register', guestOnly, (req, res) =>
   res.render('auth/register', { title: 'Daftar', error: null, form: {} }));
@@ -42,7 +44,7 @@ router.post('/register', guestOnly, unggahAvatar, async (req, res) => {
   res.redirect('/login');
 });
 
-router.get('/login', guestOnly, (req, res) =>
+router.get(JALUR_LOGIN, guestOnly, (req, res) =>
   res.render('auth/login', { title: 'Masuk', error: null, form: {} }));
 
 router.post('/login', guestOnly, async (req, res) => {

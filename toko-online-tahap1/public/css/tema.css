@@ -200,3 +200,26 @@ html.menu-buka .logo { color: var(--putih); }
 .kaki .logo-kecil { font: 900 1.4rem 'Archivo', sans-serif; letter-spacing: .14em; text-transform: uppercase; opacity: 1; }
 .kaki-raksasa { font: 900 clamp(4rem, 19vw, 16rem)/.8 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, .18); white-space: nowrap; margin: 2.5rem 0 -.08em; user-select: none; }
 .kaki-bawah { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; border-top: 1px solid rgba(255, 255, 255, .18); padding: 1.2rem 0; font-size: .78rem; opacity: .75; }
+
+/* ===== PERBAIKAN ===== */
+/* Jarak kiri-kanan di HP: sebelumnya tertimpa oleh padding bagian halaman (mis. .katalog { padding: 2rem 0 }) */
+.container { padding-left: 1.25rem; padding-right: 1.25rem; }
+@media (min-width: 1200px) { .container { padding-left: 2rem; padding-right: 2rem; } }
+body { overflow-x: clip; }
+
+/* Header lebih besar di laptop */
+@media (min-width: 992px) {
+  .kepala-isi { min-height: 5.2rem; padding-inline: 2rem; }
+  .logo { font-size: 1.7rem; }
+  .menu-utama { gap: 2.4rem; }
+  .menu-utama a, .aksi a, .tautan-tombol { font-size: .9rem; }
+  .btn-kecil { padding: .75rem 1.3rem; }
+  .avatar-kecil { width: 2.2rem; height: 2.2rem; }
+  .pengumuman { font-size: .76rem; padding: .75rem 1rem; }
+}
+/* Header di HP: logo tidak terpotong, keranjang tetap terlihat */
+@media (max-width: 991.98px) {
+  .kepala-isi { min-height: 4.4rem; gap: .5rem; padding-inline: 1rem; }
+  .logo { flex: 1 1 0; min-width: 0; margin-inline: 0; max-width: none; text-align: center; font-size: 1.1rem; letter-spacing: .1em; }
+  .aksi a.keranjang { font-size: .74rem; }
+}

@@ -67,6 +67,12 @@ const PORT = process.env.PORT || 3000;
 if (require.main === module) {
   db.siap
     .then(() => app.listen(PORT, '0.0.0.0', () => console.log(`Toko berjalan di http://localhost:${PORT}`)))
-    .catch((e) => { console.error('Gagal terhubung ke database:', e.message); process.exit(1); });
+    .catch((e) => {
+      const kode = e.code || (e.errors && e.errors[0] && e.errors[0].code) || e.message || String(e);
+      console.error('Gagal terhubung ke database:', kode);
+      if (kode === 'ECONNREFUSED') console.error('MySQL belum menyala. Buka XAMPP lalu klik Start pada MySQL. Jika sudah, isi DB_HOST=127.0.0.1 di file .env.');
+      if (kode === 'ER_ACCESS_DENIED_ERROR') console.error('User atau password database salah. Periksa DB_USER dan DB_PASSWORD di file .env.');
+      process.exit(1);
+    });
 }
 module.exports = app;
