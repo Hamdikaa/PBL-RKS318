@@ -1,0 +1,115 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<div class="container my-5 flex-grow-1">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/produk" class="text-decoration-none">Katalog</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Detail Produk</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4 g-lg-5 mb-5">
+        <!-- Bagian Kiri: Foto Produk -->
+        <div class="col-md-5">
+            <div class="bg-white p-3 rounded-4 shadow-sm border border-light text-center">
+                <img src="/uploads/<%= product.gambar || 'default.jpg' %>" class="img-fluid rounded-3 object-fit-contain" style="max-height: 400px;" alt="<%= product.nama %>">
+            </div>
+        </div>
+
+        <!-- Bagian Kanan: Informasi Produk -->
+        <div class="col-md-7">
+            <div class="p-2">
+                <span class="badge bg-primary-subtle text-primary mb-2 text-capitalize px-3 py-1.5 rounded-pill"><%= product.kategori || 'Umum' %></span>
+                <h2 class="fw-bold text-dark mb-1"><%= product.nama %></h2>
+                
+                <div class="d-flex align-items-center mb-3">
+                    <span class="text-warning fs-5 me-2">
+                        <i class="bi bi-star-fill"></i> <%= avgRating %>
+                    </span>
+                    <span class="text-muted small border-start ps-2">(<%= reviews.length %> Ulasan Pelanggan)</span>
+                </div>
+
+                <h3 class="fw-bold text-danger mb-4">Rp <%= product.harga.toLocaleString('id-ID') %></h3>
+                
+                <h6 class="fw-bold text-dark mb-2">Deskripsi Produk</h6>
+                <p class="text-secondary lh-base mb-4"><%= product.deskripsi %></p>
+                
+                <hr class="text-muted opacity-25 mb-4">
+
+                <!-- Form Masuk Keranjang Belanja -->
+                <form action="/keranjang/add/<%= product.id %>" method="POST" class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label class="small text-muted fw-semibold">Jumlah Beli</label>
+                        <input type="number" name="qty" value="1" min="1" max="<%= product.stok %>" class="form-control text-center bg-light border" style="width: 80px;" <%= product.stok === 0 ? 'disabled' : '' %>>
+                    </div>
+                    <div class="col">
+                        <label class="d-none d-md-block text-transparent small">Aksi</label>
+                        <% if (product.stok > 0) { %>
+                            <button type="submit" class="btn btn-primary px-4 py-2 rounded-3 w-100 fw-bold"><i class="bi bi-cart-plus-fill me-2"></i> Tambah Ke Keranjang</button>
+                        <% } else { %>
+                            <button type="button" class="btn btn-secondary px-4 py-2 rounded-3 w-100 fw-bold" disabled>Stok Habis</button>
+                        <% } %>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bagian Ulasan Bintang Pelanggan -->
+    <div class="row pt-4 border-top">
+        <div class="col-md-7">
+            <h5 class="fw-bold text-dark mb-4"><i class="bi bi-chat-left-text-fill text-primary me-2"></i> Ulasan Produk</h5>
+
+            <!-- Form Beri Ulasan Baru -->
+            <% if (user) { %>
+                <div class="card card-body shadow-sm border-0 rounded-4 bg-white p-4 mb-4">
+                    <h6 class="fw-bold mb-3 text-dark">Tulis Ulasan Anda</h6>
+                    <form action="/produk/detail/<%= product.id %>/ulasan" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-semibold">Beri Rating Bintang</label>
+                            <select name="rating" class="form-select bg-light" required>
+                                <option value="5">⭐⭐⭐⭐⭐ (5 - Sangat Puas)</option>
+                                <option value="4">⭐⭐⭐⭐ (4 - Puas)</option>
+                                <option value="3">⭐⭐⭐ (3 - Cukup Baik)</option>
+                                <option value="2">⭐⭐ (2 - Kurang Puas)</option>
+                                <option value="1">⭐ (1 - Buruk)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-semibold">Komentar / Catatan Anda</label>
+                            <textarea name="komentar" class="form-control bg-light" rows="3" placeholder="Tulis kepuasan Anda mengenai produk ini..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary rounded-pill px-4 fw-medium">Kirim Ulasan</button>
+                    </form>
+                </div>
+            <% } else { %>
+                <div class="alert alert-light border small text-muted rounded-3 mb-4"><i class="bi bi-info-circle me-1"></i> Silakan <a href="/auth/login" class="text-primary font-weight-bold">Login</a> terlebih dahulu untuk mengirimkan ulasan produk.</div>
+            <% } %>
+
+            <!-- Daftar List Ulasan Masuk -->
+            <div class="space-y-3">
+                <% if (reviews.length === 0) { %>
+                    <p class="text-muted small italic">Belum ada ulasan untuk produk ini.</p>
+                <% } else { %>
+                    <% reviews.forEach(rev => { %>
+                        <div class="p-3 bg-white border border-light shadow-none rounded-3 mb-3">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap mb-1">
+                                <h6 class="fw-bold mb-0 text-dark small"><%= rev.nama_user %></h6>
+                                <small class="text-muted style-italic" style="font-size: 0.75rem;"><%= rev.tanggal %></small>
+                            </div>
+                            <div class="text-warning small mb-2">
+                                <% for(let i=1; i<=5; i++) { %>
+                                    <i class="bi <%= i <= rev.rating ? 'bi-star-fill' : 'bi-star' %>"></i>
+                                <% } %>
+                            </div>
+                            <p class="mb-0 text-secondary small text-break"><%= rev.komentar %></p>
+                        </div>
+                    <% }) %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

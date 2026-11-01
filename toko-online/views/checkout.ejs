@@ -1,0 +1,59 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="container my-5 flex-grow-1">
+    <h4 class="fw-bold mb-4 text-dark"><i class="bi bi-shield-check text-success me-2"></i> Konfirmasi Pemesanan</h4>
+    
+    <div class="row g-4">
+        <!-- Kolom Kiri: Input Informasi Penerima & Akun Bank -->
+        <div class="col-md-7">
+            <div class="card p-4 border-0 shadow-sm rounded-4 bg-white">
+                <h5 class="fw-bold text-dark mb-3">Informasi Tujuan Transfer</h5>
+                
+                <div class="alert alert-warning border-0 rounded-3 shadow-none p-3 mb-4">
+                    <h6 class="fw-bold text-dark mb-1"><i class="bi bi-bank me-1"></i> Rekening Resmi TokoKu:</h6>
+                    <p class="mb-0 small text-secondary">Bank Central Asia (BCA) : <b>123-4567-890</b></p>
+                    <p class="mb-0 small text-secondary">Atas Nama : <b>PT TokoKu Retail Indonesia</b></p>
+                </div>
+
+                <!-- Form checkout menembak ke rute order/checkout -->
+                <form action="/order/checkout" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-semibold">Alamat Lengkap Pengiriman Domisili</label>
+                        <textarea class="form-control bg-light border-0 rounded-3 p-3 text-dark" name="alamat" rows="4" required placeholder="Tuliskan nama jalan, nomor rumah, RT/RW, kecamatan, kota, dan kode pos secara terperinci..."></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <small class="text-muted d-block lh-sm mb-3">* Dengan mengklik tombol di bawah ini, stok produk akan otomatis terpotong sementara dan status pesanan Anda berubah menjadi <b>Menunggu Pembayaran</b>.</small>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 py-2.5 rounded-pill fw-bold text-white shadow-sm fs-6">Selesaikan Pemesanan</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Kolom Kanan: Tinjauan Item Yang Dibeli -->
+        <div class="col-md-5">
+            <div class="card p-4 border-0 shadow-sm rounded-4 bg-white sticky-top" style="top: 90px; z-index: 10;">
+                <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">Keranjang Belanja Anda</h5>
+                
+                <div class="overflow-y-auto mb-3" style="max-height: 220px;">
+                    <% cart.forEach(item => { %>
+                        <div class="d-flex justify-content-between align-items-center mb-2.5 border-bottom border-light pb-2">
+                            <div class="text-truncate me-3" style="max-width: 70%;">
+                                <span class="fw-semibold text-dark small d-block text-truncate"><%= item.nama %></span>
+                                <small class="text-muted"><%= item.qty %> barang x Rp <%= item.harga.toLocaleString('id-ID') %></small>
+                            </div>
+                            <span class="fw-bold text-dark small">Rp <%= (item.harga * item.qty).toLocaleString('id-ID') %></span>
+                        </div>
+                    <% }) %>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center pt-2">
+                    <span class="fw-bold text-secondary small">Total Pembayaran</span>
+                    <span class="fw-bold text-danger fs-4">Rp <%= total.toLocaleString('id-ID') %></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
