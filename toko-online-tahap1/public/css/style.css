@@ -1,0 +1,70 @@
+:root {
+  --emas: #FFD700;
+  --putih: #FFFFFF;
+  --mentari: #FFB74D;
+  --jingga: #FF8C00;
+  --merah: #FF4500;
+  --tinta: #2B1600;
+  --fajar: #FFF3C4;
+}
+body {
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+  color: var(--tinta);
+  background: var(--putih);
+}
+h1, h2, h3, .brand { font-family: 'Bricolage Grotesque', 'Nunito Sans', sans-serif; }
+a { color: var(--merah); }
+:focus-visible { outline: 3px solid var(--merah); outline-offset: 2px; }
+
+/* Navbar */
+.bar { background: var(--putih); border-bottom: 3px solid var(--emas); }
+.brand { font-weight: 800; font-size: 1.35rem; color: var(--tinta); display: flex; align-items: center; gap: .5rem; }
+.matahari {
+  width: 1.4rem; height: 1.4rem; border-radius: 50%;
+  background: radial-gradient(circle, var(--emas) 0 40%, var(--jingga) 40% 70%, var(--merah) 70%);
+}
+.bar .nav-link { color: var(--tinta); font-weight: 600; }
+.sapa { font-weight: 400 !important; }
+
+/* Tombol */
+.btn-mentari { background: var(--jingga); color: var(--tinta); font-weight: 700; border: 0; }
+.btn-mentari:hover, .btn-mentari:focus { background: var(--merah); color: var(--putih); }
+.btn-garis { border: 2px solid var(--jingga); color: var(--tinta); font-weight: 600; background: transparent; }
+.btn-garis:hover { background: var(--fajar); color: var(--tinta); }
+
+/* Beranda */
+.hero {
+  position: relative; overflow: hidden;
+  background: linear-gradient(180deg, var(--fajar) 0%, var(--putih) 85%);
+  padding: 4rem 0 10rem;
+}
+.hero::before {
+  content: ""; position: absolute; right: -6rem; bottom: -11rem;
+  width: 22rem; height: 22rem; border-radius: 50%;
+  background: radial-gradient(circle, var(--emas) 0 36%, var(--mentari) 36% 56%, var(--jingga) 56% 78%, var(--merah) 78%);
+}
+.hero-teks { position: relative; max-width: 34rem; }
+.hero h1 { font-weight: 800; font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.1; margin-bottom: 1rem; }
+.hero p { font-size: 1.1rem; max-width: 30rem; }
+@media (min-width: 768px) {
+  .hero { padding: 6rem 0 9rem; }
+  .hero::before { right: -4rem; bottom: -14rem; width: 36rem; height: 36rem; }
+}
+
+.cara { padding: 3rem 0; max-width: 46rem; }
+.cara h2 { font-weight: 800; margin-bottom: 1.2rem; }
+.cara ol { padding-left: 1.4rem; }
+.cara li { margin-bottom: .8rem; padding-left: .3rem; }
+.cara li::marker { color: var(--merah); font-weight: 700; }
+
+/* Halaman login / daftar */
+.auth { padding: 3rem 0; }
+.kartu-auth {
+  max-width: 26rem; margin: 0 auto; padding: 2rem 1.5rem;
+  background: var(--putih); border: 1px solid #FFE0A6; border-top: 5px solid var(--jingga);
+  border-radius: .75rem;
+}
+.kartu-auth h1 { font-weight: 800; font-size: 1.6rem; }
+.form-control:focus { border-color: var(--jingga); box-shadow: 0 0 0 .2rem rgba(255, 140, 0, .25); }
+
+.kaki { background: var(--tinta); color: var(--fajar); padding: 1.2rem 0; font-size: .9rem; }

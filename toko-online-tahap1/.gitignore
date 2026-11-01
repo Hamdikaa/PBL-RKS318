@@ -1,0 +1,6 @@
+node_modules/
+.env
+toko.db*
+bukti/
+public/uploads/*
+!public/uploads/.gitkeep

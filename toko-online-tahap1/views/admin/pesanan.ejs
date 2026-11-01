@@ -1,0 +1,33 @@
+<%- include('../partials/header') %>
+<section class="container admin">
+  <h1>Pesanan masuk</h1>
+  <div class="chip-baris">
+    <a class="chip <%= !status ? 'aktif' : '' %>" href="/admin/pesanan">Semua</a>
+    <% Object.entries(semuaStatus).forEach(([k, v]) => { %>
+      <a class="chip <%= status === k ? 'aktif' : '' %>" href="/admin/pesanan?status=<%= k %>"><%= v %></a>
+    <% }) %>
+  </div>
+  <% if (!pesanan.length) { %>
+    <div class="kosong"><p>Tidak ada pesanan pada filter ini.</p></div>
+  <% } else { %>
+  <div class="table-responsive">
+    <table class="table align-middle tabel-admin">
+      <thead><tr><th>No.</th><th>Tanggal</th><th>Pelanggan</th><th>Total</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+      <% pesanan.forEach(o => { %>
+        <tr>
+          <td class="fw-semibold">#<%= o.id %></td>
+          <td><%= tanggal(o.created_at) %></td>
+          <td><%= o.pelanggan %></td>
+          <td><%= rupiah(o.total) %></td>
+          <td><span class="status st-<%= o.status %>"><%= statusLabel(o.status) %></span></td>
+          <td><a class="btn btn-sm btn-garis" href="/admin/pesanan/<%= o.id %>"><%= o.status === 'menunggu_verifikasi' ? 'Periksa' : 'Lihat' %></a></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+  <a class="kembali" href="/admin">&larr; Dashboard</a>
+</section>
+<%- include('../partials/footer') %>

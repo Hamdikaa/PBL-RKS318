@@ -1,0 +1,32 @@
+</main>
+<footer class="kaki">
+  <div class="container">
+    <div class="kaki-grid">
+      <div>
+        <p class="logo-kecil"><%= toko.nama %></p>
+        <p class="kaki-slogan"><%= toko.slogan %></p>
+      </div>
+      <div>
+        <h2>Belanja</h2>
+        <a href="/produk">Semua produk</a>
+        <a href="/produk?urut=rating">Rating tertinggi</a>
+        <a href="/keranjang">Keranjang</a>
+      </div>
+      <div>
+        <h2>Akun</h2>
+        <% if (user) { %><a href="/profil">Profil saya</a><a href="/pesanan">Pesanan saya</a>
+        <% } else { %><a href="/login">Masuk</a><a href="/register">Daftar</a><% } %>
+      </div>
+      <div>
+        <h2>Bantuan</h2>
+        <p>Pembayaran lewat transfer bank. Unggah bukti transfer di halaman pesanan, lalu pantau statusnya dari HP.</p>
+        <% if (toko.email) { %><a href="mailto:<%= toko.email %>"><%= toko.email %></a><% } %>
+      </div>
+    </div>
+    <div class="kaki-raksasa" aria-hidden="true"><%= toko.nama %></div>
+    <div class="kaki-bawah"><span>&copy; <%= new Date().getFullYear() %> <%= toko.nama %></span><span>Semua hak dilindungi</span></div>
+  </div>
+</footer>
+<script src="/js/motion.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<%- include('../partials/header') %>
+<section class="container admin">
+  <h1><%= title %></h1>
+  <% if (user.role === 'admin') { %>
+    <dl class="ringkas">
+      <div><dt>Produk</dt><dd><%= stat.produk %></dd></div>
+      <div><dt>Pesanan</dt><dd><%= stat.pesanan %></dd></div>
+      <div><dt>Menunggu verifikasi</dt><dd><a href="/admin/pesanan?status=menunggu_verifikasi"><%= stat.verifikasi %></a></dd></div>
+      <div><dt>Pelanggan</dt><dd><%= stat.pengguna %></dd></div>
+    </dl>
+    <div class="menu-admin">
+      <a href="/admin/produk">Kelola produk</a>
+      <a href="/admin/pesanan">Pesanan dan bukti bayar</a>
+      <a href="/admin/pengguna">Kelola pengguna</a>
+      <a href="/admin/laporan">Laporan transaksi</a>
+    </div>
+  <% } else { %>
+    <dl class="ringkas">
+      <div><dt>Produk saya</dt><dd><%= stat.produk %></dd></div>
+      <div><dt>Stok habis</dt><dd><%= stat.habis %></dd></div>
+      <div><dt>Menunggu verifikasi</dt><dd><a href="/admin/pesanan?status=menunggu_verifikasi"><%= stat.verifikasi %></a></dd></div>
+    </dl>
+    <div class="menu-admin">
+      <a href="/admin/produk">Produk saya</a>
+      <a href="/admin/produk/baru">Tambah produk</a>
+      <a href="/admin/pesanan">Pesanan masuk</a>
+    </div>
+  <% } %>
+</section>
+<%- include('../partials/footer') %>

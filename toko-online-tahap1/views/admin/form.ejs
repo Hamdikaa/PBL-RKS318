@@ -1,0 +1,40 @@
+<%- include('../partials/header') %>
+<section class="container admin">
+  <div class="kartu-auth form-produk">
+    <h1><%= judul %></h1>
+    <% if (error) { %><div class="alert alert-danger" role="alert"><%= error %></div><% } %>
+    <form method="post" action="<%= aksi %>" enctype="multipart/form-data">
+      <label for="nama" class="form-label">Nama produk</label>
+      <input id="nama" name="nama" class="form-control mb-3" value="<%= produk.nama || '' %>" required minlength="2">
+
+      <label for="deskripsi" class="form-label">Deskripsi</label>
+      <textarea id="deskripsi" name="deskripsi" rows="4" class="form-control mb-3"><%= produk.deskripsi || '' %></textarea>
+
+      <div class="row g-3 mb-3">
+        <div class="col-6">
+          <label for="harga" class="form-label">Harga (Rp)</label>
+          <input id="harga" name="harga" type="number" min="1" step="1" class="form-control" value="<%= produk.harga || '' %>" required>
+        </div>
+        <div class="col-6">
+          <label for="stok" class="form-label">Stok</label>
+          <input id="stok" name="stok" type="number" min="0" step="1" class="form-control" value="<%= produk.stok === undefined ? 0 : produk.stok %>" required>
+        </div>
+      </div>
+
+      <label for="kategori" class="form-label">Kategori</label>
+      <input id="kategori" name="kategori" list="daftar-kategori" class="form-control mb-3" value="<%= produk.kategori || '' %>" placeholder="Ketik atau pilih">
+      <datalist id="daftar-kategori"><% kategori.forEach(k => { %><option value="<%= k %>"><% }) %></datalist>
+
+      <label for="gambar" class="form-label">Foto produk</label>
+      <% if (produk.gambar) { %><div class="mb-2"><img class="mini" src="/uploads/<%= produk.gambar %>" alt="Foto saat ini"> <small class="text-muted">Pilih file baru untuk mengganti.</small></div><% } %>
+      <input id="gambar" name="gambar" type="file" accept="image/jpeg,image/png,image/webp" class="form-control">
+      <div class="form-text mb-4">JPG, PNG, atau WEBP, maksimal 2 MB.</div>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-mentari">Simpan</button>
+        <a class="btn btn-garis" href="/admin/produk">Batal</a>
+      </div>
+    </form>
+  </div>
+</section>
+<%- include('../partials/footer') %>

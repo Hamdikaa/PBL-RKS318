@@ -1,0 +1,59 @@
+/* ===== MOTION: cepat, tegas, tidak berlebihan. Hanya memakai transform dan opacity. ===== */
+:root { --laju: cubic-bezier(.2, .8, .2, 1); }
+
+/* Jarak aman di HP agar konten tidak menempel ke tepi layar */
+@media (max-width: 767.98px) { .container { --bs-gutter-x: 2.5rem; } }
+
+main { animation: halaman .45s var(--laju) both; }
+@keyframes halaman { from { opacity: 0; transform: translateY(10px); } }
+
+/* Header bersembunyi saat scroll ke bawah, muncul lagi saat scroll ke atas */
+.kepala { transition: transform .4s var(--laju); }
+.kepala.sembunyi { transform: translateY(-100%); }
+
+/* Beranda: baris judul naik dari balik topeng, elemen lain menyusul */
+.baris > span { animation: naik 1s var(--laju) both; }
+.baris:nth-child(2) > span { animation-delay: .12s; }
+.baris:nth-child(3) > span { animation-delay: .24s; }
+@keyframes naik { from { transform: translateY(108%); } }
+.kicker, .sampul-teks, .sampul-aksi { animation: muncul .8s .35s var(--laju) both; }
+.sampul-teks { animation-delay: .5s; }
+.sampul-aksi { animation-delay: .62s; }
+@keyframes muncul { from { opacity: 0; transform: translateY(18px); } }
+.sampul::before { animation: kontur 1.6s var(--laju) both; }
+@keyframes kontur { from { opacity: 0; transform: scale(1.15); } }
+
+/* Pita berjalan */
+.ticker-jalur { animation: jalan 32s linear infinite; }
+.ticker:hover .ticker-jalur { animation-play-state: paused; }
+@keyframes jalan { to { transform: translateX(-50%); } }
+
+/* Muncul saat di-scroll (kelas dipasang oleh motion.js) */
+.js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .6s var(--laju), transform .6s var(--laju); transition-delay: calc(var(--i, 0) * 70ms); }
+.js .reveal.masuk { opacity: 1; transform: none; }
+.js .reveal .kartu-foto img { clip-path: inset(100% 0 0 0); transition: clip-path 1s var(--laju); transition-delay: calc(var(--i, 0) * 70ms + 120ms); }
+.js .reveal.masuk .kartu-foto img { clip-path: inset(0); }
+
+/* Kartu produk: foto membesar halus dan tombol naik dari bawah */
+.kartu-foto img, .kartu-foto .tanpa-foto { transition: transform .9s var(--laju); }
+.lihat { transform: translateY(101%); transition: transform .45s var(--laju); }
+@media (hover: hover) {
+  .kartu-produk:hover .kartu-foto img, .kartu-produk:hover .tanpa-foto { transform: scale(1.06); }
+  .kartu-produk:hover .lihat { transform: none; }
+}
+.kartu-produk:focus-within .lihat { transform: none; }
+@media (hover: none) { .lihat { display: none; } }
+
+/* Tombol ditekan, notifikasi, angka keranjang */
+.btn { transition: background-color .2s, color .2s, border-color .2s, transform .15s; }
+.btn:active { transform: scale(.97); }
+.alert { animation: turun .4s var(--laju) both; }
+@keyframes turun { from { opacity: 0; transform: translateY(-10px); } }
+.hitung { animation: meletup .5s var(--laju) both; }
+@keyframes meletup { from { transform: scale(.3); opacity: 0; } }
+
+/* Hormati pengaturan "kurangi gerakan" di perangkat */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .js .reveal, .js .reveal .kartu-foto img { opacity: 1; transform: none; clip-path: none; }
+}

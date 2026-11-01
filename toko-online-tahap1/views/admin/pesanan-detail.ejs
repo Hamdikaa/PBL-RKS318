@@ -1,0 +1,63 @@
+<%- include('../partials/header') %>
+<section class="container admin">
+  <a class="kembali" href="/admin/pesanan">&larr; Semua pesanan</a>
+  <div class="d-flex flex-wrap align-items-center gap-3 mt-2 mb-1">
+    <h1 class="m-0">Pesanan #<%= o.id %></h1>
+    <span class="status st-<%= o.status %>"><%= statusLabel(o.status) %></span>
+  </div>
+  <p class="text-muted"><%= o.pelanggan %> (<%= o.email %>) &middot; <%= tanggal(o.created_at) %></p>
+
+  <div class="row g-4">
+    <div class="col-md-7">
+      <ul class="ringkasan-item">
+        <% items.forEach(i => { %>
+          <li><span><%= i.nama %> &times; <%= i.qty %> <small class="text-muted">(<%= rupiah(i.harga) %>)</small></span><strong><%= rupiah(i.harga * i.qty) %></strong></li>
+        <% }) %>
+      </ul>
+      <div class="rincian">
+        <div><span>Subtotal barang</span><span><%= rupiah(o.total - o.ongkir) %></span></div>
+        <div><span>Ongkos kirim (<%= kurirNama %>)</span><span><%= rupiah(o.ongkir) %></span></div>
+      </div>
+      <div class="total-baris"><span>Total yang harus dibayar</span><strong><%= rupiah(o.total) %></strong></div>
+      <div class="kotak-alamat">
+        <h2>Dikirim ke</h2>
+        <% if (o.alamat) { %><strong><%= o.nama_penerima %></strong> (<%= o.telepon %>)<br><%= o.alamat %><% } else { %>Alamat tidak tercatat.<% } %>
+        <% if (o.resi) { %><br><br>Nomor resi: <strong><%= o.resi %></strong><% } %>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <div class="kotak-bayar">
+        <h2 class="h5 fw-bold">Bukti pembayaran</h2>
+        <% if (o.bukti_bayar) { %>
+          <a href="/pesanan/<%= o.id %>/bukti" target="_blank" rel="noopener"><img class="bukti" src="/pesanan/<%= o.id %>/bukti" alt="Bukti transfer"></a>
+          <p class="form-text">Cocokkan jumlah transfer dengan total pesanan.</p>
+        <% } else { %>
+          <p>Pelanggan belum mengunggah bukti.</p>
+        <% } %>
+
+        <% if (!kelola) { %>
+          <div class="alert alert-warning mt-3 mb-0" role="alert">Pesanan ini berisi produk dari penjual lain, jadi hanya admin yang dapat memprosesnya.</div>
+        <% } else if (o.status === 'menunggu_verifikasi') { %>
+          <div class="d-flex gap-2 mt-3">
+            <form method="post" action="/admin/pesanan/<%= o.id %>/setujui" class="flex-fill" onsubmit="return confirm('Setujui pembayaran ini?')">
+              <button class="btn btn-mentari w-100">Setujui</button>
+            </form>
+            <form method="post" action="/admin/pesanan/<%= o.id %>/tolak" class="flex-fill" onsubmit="return confirm('Tolak bukti ini?')">
+              <button class="btn btn-bahaya w-100">Tolak</button>
+            </form>
+          </div>
+        <% } else if (o.status === 'disetujui') { %>
+          <form method="post" action="/admin/pesanan/<%= o.id %>/kirim" class="mt-3">
+            <label for="resi" class="form-label">Nomor resi pengiriman (<%= kurirNama %>)</label>
+            <input id="resi" name="resi" class="form-control mb-2" required minlength="4" maxlength="60" autocomplete="off">
+            <button class="btn btn-mentari w-100">Tandai dikirim</button>
+          </form>
+        <% } else if (o.status === 'dikirim') { %>
+          <p class="mt-3 mb-0">Menunggu pelanggan mengonfirmasi barang diterima.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+<%- include('../partials/footer') %>

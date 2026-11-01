@@ -1,0 +1,11 @@
+/* Avatar */
+.avatar-kecil { width: 1.7rem; height: 1.7rem; border-radius: 50%; object-fit: cover; margin-right: .45rem; vertical-align: middle; }
+.avatar-besar { width: 5rem; height: 5rem; border-radius: 50%; object-fit: cover; flex: none; }
+.inisial { display: inline-flex; align-items: center; justify-content: center; background: var(--emas); color: var(--tinta); font-weight: 800; font-family: 'Bricolage Grotesque', sans-serif; }
+.avatar-besar.inisial { font-size: 2rem; }
+.avatar-kecil.inisial { font-size: .85rem; }
+
+/* Filter katalog */
+.saring-produk { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1rem 0 1.2rem; }
+.saring-produk > div { flex: 1 1 8.5rem; }
+.saring-produk .kolom-cari { flex: 2 1 14rem; }

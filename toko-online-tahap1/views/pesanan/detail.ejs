@@ -1,0 +1,78 @@
+<%- include('../partials/header') %>
+<section class="container belanja">
+  <a class="kembali" href="/pesanan">&larr; Semua pesanan</a>
+  <div class="d-flex flex-wrap align-items-center gap-3 mt-2 mb-3">
+    <h1 class="m-0">Pesanan #<%= o.id %></h1>
+    <span class="status st-<%= o.status %>"><%= statusLabel(o.status) %></span>
+  </div>
+  <p class="text-muted"><%= tanggal(o.created_at) %></p>
+
+  <div class="row g-4">
+    <div class="col-md-7">
+      <ul class="ringkasan-item">
+        <% items.forEach(i => { %>
+          <li><span><%= i.nama %> &times; <%= i.qty %> <small class="text-muted">(<%= rupiah(i.harga) %>)</small></span><strong><%= rupiah(i.harga * i.qty) %></strong></li>
+        <% }) %>
+      </ul>
+      <div class="rincian">
+        <div><span>Subtotal barang</span><span><%= rupiah(o.total - o.ongkir) %></span></div>
+        <div><span>Ongkos kirim (<%= kurirNama %>)</span><span><%= rupiah(o.ongkir) %></span></div>
+      </div>
+      <div class="total-baris"><span>Total</span><strong><%= rupiah(o.total) %></strong></div>
+
+      <div class="kotak-alamat">
+        <h2>Dikirim ke</h2>
+        <% if (o.alamat) { %>
+          <strong><%= o.nama_penerima %></strong> (<%= o.telepon %>)<br><%= o.alamat %>
+        <% } else { %>Alamat tidak tercatat.<% } %>
+        <% if (o.resi) { %><br><br>Nomor resi: <strong><%= o.resi %></strong><% } %>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <div class="kotak-bayar">
+        <% if (o.status === 'menunggu_bayar' || o.status === 'ditolak') { %>
+          <% if (o.status === 'ditolak') { %>
+            <div class="alert alert-danger" role="alert">Bukti pembayaran sebelumnya ditolak. Silakan unggah bukti yang benar.</div>
+          <% } %>
+          <h2 class="h5 fw-bold">Transfer pembayaran</h2>
+          <p class="rek"><strong><%= bank.nama %> <%= bank.rekening %></strong><br>a.n. <%= bank.atasNama %><br>Jumlah: <strong><%= rupiah(o.total) %></strong></p>
+          <% if (user.id === o.user_id) { %>
+          <form method="post" action="/pesanan/<%= o.id %>/bukti" enctype="multipart/form-data">
+            <label for="bukti" class="form-label">Foto bukti transfer</label>
+            <input id="bukti" name="bukti" type="file" accept="image/jpeg,image/png,image/webp" class="form-control" required>
+            <div class="form-text mb-3">JPG, PNG, atau WEBP, maksimal 3 MB.</div>
+            <button class="btn btn-mentari w-100">Kirim bukti</button>
+          </form>
+          <form method="post" action="/pesanan/<%= o.id %>/batal" class="mt-2" onsubmit="return confirm('Batalkan pesanan ini?')">
+            <button class="btn btn-bahaya w-100">Batalkan pesanan</button>
+          </form>
+          <% } %>
+        <% } else if (o.status === 'menunggu_verifikasi') { %>
+          <h2 class="h5 fw-bold">Bukti sudah dikirim</h2>
+          <p>Penjual atau admin sedang memeriksa pembayaran Anda.</p>
+          <img class="bukti" src="/pesanan/<%= o.id %>/bukti" alt="Bukti transfer">
+        <% } else if (o.status === 'disetujui') { %>
+          <h2 class="h5 fw-bold">Pembayaran diterima</h2>
+          <p>Pesanan Anda disetujui dan sedang disiapkan untuk dikirim.</p>
+          <% if (o.bukti_bayar) { %><img class="bukti" src="/pesanan/<%= o.id %>/bukti" alt="Bukti transfer"><% } %>
+        <% } else if (o.status === 'dikirim') { %>
+          <h2 class="h5 fw-bold">Pesanan dalam perjalanan</h2>
+          <p>Nomor resi: <strong><%= o.resi %></strong></p>
+          <% if (user.id === o.user_id) { %>
+          <form method="post" action="/pesanan/<%= o.id %>/selesai" onsubmit="return confirm('Barang sudah Anda terima?')">
+            <button class="btn btn-mentari w-100">Pesanan sudah diterima</button>
+          </form>
+          <% } %>
+        <% } else if (o.status === 'selesai') { %>
+          <h2 class="h5 fw-bold">Pesanan selesai</h2>
+          <p>Terima kasih sudah berbelanja. Jangan lupa beri ulasan di halaman produk.</p>
+        <% } else { %>
+          <h2 class="h5 fw-bold">Pesanan dibatalkan</h2>
+          <p>Stok barang sudah dikembalikan.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+<%- include('../partials/footer') %>

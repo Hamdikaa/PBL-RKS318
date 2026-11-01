@@ -1,0 +1,63 @@
+<%- include('partials/header') %>
+<% const pilih = kurir.find((k) => k.kode === form.kurir) || kurir[0]; %>
+<section class="container belanja">
+  <h1>Checkout</h1>
+  <% if (error) { %><div class="alert alert-danger" role="alert"><%= error %></div><% } %>
+  <form method="post" action="/checkout">
+    <div class="row g-4">
+      <div class="col-md-7">
+        <h2 class="h5 fw-bold">Alamat pengiriman</h2>
+        <label for="penerima" class="form-label">Nama penerima</label>
+        <input id="penerima" name="penerima" class="form-control mb-3" value="<%= form.penerima %>" required minlength="2">
+        <label for="telepon" class="form-label">No. HP penerima</label>
+        <input id="telepon" name="telepon" type="tel" class="form-control mb-3" value="<%= form.telepon %>" required placeholder="08xxxxxxxxxx">
+        <label for="alamat" class="form-label">Alamat lengkap</label>
+        <textarea id="alamat" name="alamat" rows="3" class="form-control mb-3" required minlength="10" placeholder="Jalan, nomor, kelurahan, kota, kode pos"><%= form.alamat %></textarea>
+
+        <h2 class="h5 fw-bold">Layanan pengiriman</h2>
+        <div class="opsi-kurir">
+          <% kurir.forEach((k) => { %>
+            <input type="radio" name="kurir" id="k-<%= k.kode %>" value="<%= k.kode %>" data-tarif="<%= k.tarif %>" <%= k.kode === pilih.kode ? 'checked' : '' %>>
+            <label for="k-<%= k.kode %>"><span><%= k.nama %></span><strong><%= rupiah(k.tarif) %></strong></label>
+          <% }) %>
+        </div>
+
+        <h2 class="h5 fw-bold">Ringkasan pesanan</h2>
+        <ul class="ringkasan-item">
+          <% items.forEach(({ p, qty, sub }) => { %>
+            <li><span><%= p.nama %> &times; <%= qty %></span><strong><%= rupiah(sub) %></strong></li>
+          <% }) %>
+        </ul>
+      </div>
+      <div class="col-md-5">
+        <div class="kotak-bayar">
+          <div class="rincian">
+            <div><span>Subtotal barang</span><span><%= rupiah(total) %></span></div>
+            <div><span>Ongkos kirim</span><span id="ongkir-teks"><%= rupiah(pilih.tarif) %></span></div>
+          </div>
+          <div class="total-baris"><span>Total bayar</span><strong id="total-akhir"><%= rupiah(total + pilih.tarif) %></strong></div>
+          <h2 class="h5 fw-bold mt-2">Cara pembayaran</h2>
+          <p>Transfer bank ke:</p>
+          <p class="rek"><strong><%= bank.nama %> <%= bank.rekening %></strong><br>a.n. <%= bank.atasNama %></p>
+          <p class="mb-3">Setelah pesanan dibuat, unggah foto bukti transfer di halaman pesanan.</p>
+          <button class="btn btn-mentari w-100">Buat pesanan</button>
+          <a href="/keranjang" class="d-block text-center mt-2">Kembali ke keranjang</a>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+<script>
+  (function () {
+    var subtotal = <%= total %>;
+    var fmt = function (n) { return 'Rp ' + n.toLocaleString('id-ID'); };
+    function hitung() {
+      var k = document.querySelector('input[name=kurir]:checked');
+      var t = k ? Number(k.dataset.tarif) : 0;
+      document.getElementById('ongkir-teks').textContent = fmt(t);
+      document.getElementById('total-akhir').textContent = fmt(subtotal + t);
+    }
+    document.querySelectorAll('input[name=kurir]').forEach(function (r) { r.addEventListener('change', hitung); });
+  })();
+</script>
+<%- include('partials/footer') %>

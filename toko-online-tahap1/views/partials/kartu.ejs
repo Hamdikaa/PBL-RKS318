@@ -1,0 +1,22 @@
+<article class="kartu-produk">
+  <div class="kartu-foto">
+    <% if (p.gambar) { %>
+      <img src="/uploads/<%= p.gambar %>" alt="<%= p.nama %>" loading="lazy">
+    <% } else { %>
+      <span class="tanpa-foto" role="img" aria-label="Belum ada foto"></span>
+    <% } %>
+    <% if (p.stok <= 0) { %><span class="lencana habis">Habis</span>
+    <% } else if (p.stok <= 5) { %><span class="lencana sisa">Sisa <%= p.stok %></span><% } %>
+    <span class="lihat" aria-hidden="true">Lihat produk</span>
+  </div>
+  <div class="isi">
+    <% if (p.kategori) { %><span class="kat"><%= p.kategori %></span><% } %>
+    <h2><a class="stretched-link" href="/produk/<%= p.id %>"><%= p.nama %></a></h2>
+    <p class="harga"><%= rupiah(p.harga) %></p>
+    <p class="rating-kecil">
+      <% if (p.jml > 0) { %><span class="bintang" aria-hidden="true">★</span> <%= p.rata %> <span class="text-muted">(<%= p.jml %>)</span>
+      <% } else { %><span class="text-muted">Belum ada ulasan</span><% } %>
+    </p>
+    <p class="stok-teks"><%= p.stok <= 0 ? 'Stok habis' : 'Stok: ' + p.stok %></p>
+  </div>
+</article>

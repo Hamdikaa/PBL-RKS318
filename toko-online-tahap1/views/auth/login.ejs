@@ -1,0 +1,16 @@
+<%- include('../partials/header') %>
+<section class="container auth">
+  <div class="kartu-auth">
+    <h1>Masuk ke akun Anda</h1>
+    <p class="text-muted">Belum punya akun? <a href="/register">Daftar</a></p>
+    <% if (error) { %><div class="alert alert-danger" role="alert"><%= error %></div><% } %>
+    <form method="post" action="/login">
+      <label for="email" class="form-label">Email</label>
+      <input id="email" name="email" type="email" class="form-control mb-3" value="<%= form.email || '' %>" autocomplete="email" required>
+      <label for="password" class="form-label">Password</label>
+      <input id="password" name="password" type="password" class="form-control mb-4" autocomplete="current-password" required>
+      <button class="btn btn-mentari w-100">Masuk</button>
+    </form>
+  </div>
+</section>
+<%- include('../partials/footer') %>

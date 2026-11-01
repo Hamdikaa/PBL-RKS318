@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+<section class="container admin">
+  <h1>Kelola pengguna</h1>
+  <form class="cari" method="get" action="/admin/pengguna" role="search">
+    <input type="search" name="q" value="<%= q %>" class="form-control" placeholder="Cari nama atau email" aria-label="Cari pengguna">
+    <button class="btn btn-mentari">Cari</button>
+  </form>
+  <div class="table-responsive">
+    <table class="table align-middle tabel-admin">
+      <thead><tr><th>Nama</th><th>Email</th><th>Peran</th><th>Status</th><th>Pesanan</th><th></th></tr></thead>
+      <tbody>
+      <% pengguna.forEach(p => { %>
+        <tr>
+          <td class="fw-semibold"><%= p.nama %><% if (p.id === user.id) { %> <small class="text-muted">(Anda)</small><% } %></td>
+          <td><%= p.email %></td>
+          <td><%= p.role %></td>
+          <td><span class="status <%= p.status === 'aktif' ? 'st-disetujui' : 'st-dibatalkan' %>"><%= p.status %></span></td>
+          <td><%= p.pesanan %></td>
+          <td><a class="btn btn-sm btn-garis" href="/admin/pengguna/<%= p.id %>">Kelola</a></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% if (!pengguna.length) { %><div class="kosong"><p>Pengguna tidak ditemukan.</p></div><% } %>
+  <a class="kembali" href="/admin">&larr; Dashboard</a>
+</section>
+<%- include('../partials/footer') %>

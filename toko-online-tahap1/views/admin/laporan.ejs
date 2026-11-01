@@ -1,0 +1,51 @@
+<%- include('../partials/header') %>
+<section class="container admin laporan">
+  <h1>Laporan transaksi</h1>
+  <form class="saring" method="get" action="/admin/laporan">
+    <div><label for="dari" class="form-label">Dari tanggal</label><input id="dari" type="date" name="dari" value="<%= f.dari %>" class="form-control"></div>
+    <div><label for="sampai" class="form-label">Sampai tanggal</label><input id="sampai" type="date" name="sampai" value="<%= f.sampai %>" class="form-control"></div>
+    <div><label for="status" class="form-label">Status</label>
+      <select id="status" name="status" class="form-select">
+        <option value="lunas" <%= f.status === 'lunas' ? 'selected' : '' %>>Sudah dibayar (disetujui, dikirim, selesai)</option>
+        <option value="" <%= !f.status ? 'selected' : '' %>>Semua status</option>
+        <% Object.entries(semuaStatus).forEach(([k, v]) => { %><option value="<%= k %>" <%= f.status === k ? 'selected' : '' %>><%= v %></option><% }) %>
+      </select>
+    </div>
+    <div class="align-self-end"><button class="btn btn-mentari">Terapkan</button></div>
+  </form>
+
+  <dl class="ringkas">
+    <div><dt>Jumlah pesanan</dt><dd><%= pesanan.length %></dd></div>
+    <div><dt>Omzet barang (sudah dibayar)</dt><dd class="kecil"><%= rupiah(omzet) %></dd></div>
+    <div><dt>Ongkir (sudah dibayar)</dt><dd class="kecil"><%= rupiah(ongkir) %></dd></div>
+  </dl>
+
+  <div class="d-flex flex-wrap gap-2 mb-4 tanpa-cetak">
+    <a class="btn btn-garis" href="/admin/laporan.csv?<%= query %>">Unduh Excel (CSV)</a>
+    <button type="button" class="btn btn-garis" onclick="window.print()">Cetak</button>
+  </div>
+
+  <h2 class="h5 fw-bold">Produk terlaris (pesanan sudah dibayar)</h2>
+  <% if (!terlaris.length) { %><p class="text-muted">Belum ada data.</p><% } else { %>
+  <table class="table tabel-admin">
+    <thead><tr><th>Produk</th><th>Terjual</th><th>Pendapatan</th></tr></thead>
+    <tbody><% terlaris.forEach(t => { %><tr><td><%= t.nama %></td><td><%= t.qty %></td><td><%= rupiah(t.pendapatan) %></td></tr><% }) %></tbody>
+  </table>
+  <% } %>
+
+  <h2 class="h5 fw-bold mt-4">Daftar transaksi</h2>
+  <% if (!pesanan.length) { %><p class="text-muted">Tidak ada transaksi pada filter ini.</p><% } else { %>
+  <div class="table-responsive">
+    <table class="table tabel-admin">
+      <thead><tr><th>No.</th><th>Tanggal</th><th>Pelanggan</th><th>Total</th><th>Status</th></tr></thead>
+      <tbody>
+      <% pesanan.forEach(o => { %>
+        <tr><td>#<%= o.id %></td><td><%= tanggal(o.created_at) %></td><td><%= o.pelanggan %></td><td><%= rupiah(o.total) %></td><td><%= statusLabel(o.status) %></td></tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+  <a class="kembali tanpa-cetak" href="/admin">&larr; Dashboard</a>
+</section>
+<%- include('../partials/footer') %>

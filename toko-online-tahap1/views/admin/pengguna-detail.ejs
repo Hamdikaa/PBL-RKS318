@@ -1,0 +1,36 @@
+<%- include('../partials/header') %>
+<section class="container admin">
+  <a class="kembali" href="/admin/pengguna">&larr; Semua pengguna</a>
+  <h1 class="mt-2"><%= u.nama %></h1>
+  <p class="text-muted"><%= u.email %> &middot; <%= u.role %> &middot; <%= u.status %> &middot; <%= pesanan %> pesanan</p>
+
+  <% if (diri) { %>
+    <div class="catatan">Ini akun Anda sendiri, jadi status dan peran tidak dapat diubah dari sini.</div>
+  <% } else { %>
+  <div class="aksi-pengguna">
+    <form method="post" action="/admin/pengguna/<%= u.id %>/status" onsubmit="return confirm('Ubah status akun ini?')">
+      <h2 class="h6 fw-bold">Status akun</h2>
+      <p>Akun nonaktif tidak bisa masuk.</p>
+      <button class="btn <%= u.status === 'aktif' ? 'btn-bahaya' : 'btn-mentari' %>"><%= u.status === 'aktif' ? 'Nonaktifkan akun' : 'Aktifkan akun' %></button>
+    </form>
+    <form method="post" action="/admin/pengguna/<%= u.id %>/role">
+      <h2 class="h6 fw-bold">Peran</h2>
+      <label for="role" class="visually-hidden">Peran</label>
+      <select id="role" name="role" class="form-select mb-2">
+        <option value="customer" <%= u.role === 'customer' ? 'selected' : '' %>>Customer</option>
+        <option value="seller" <%= u.role === 'seller' ? 'selected' : '' %>>Seller (penjual)</option>
+        <option value="admin" <%= u.role === 'admin' ? 'selected' : '' %>>Admin</option>
+      </select>
+      <button class="btn btn-garis">Simpan peran</button>
+    </form>
+  </div>
+  <% } %>
+
+  <form method="post" action="/admin/pengguna/<%= u.id %>/reset" class="aksi-reset">
+    <h2 class="h6 fw-bold">Reset password</h2>
+    <label for="password" class="form-label">Password baru (minimal 6 karakter)</label>
+    <input id="password" name="password" type="text" class="form-control mb-2" minlength="6" required autocomplete="off">
+    <button class="btn btn-garis">Reset password</button>
+  </form>
+</section>
+<%- include('../partials/footer') %>

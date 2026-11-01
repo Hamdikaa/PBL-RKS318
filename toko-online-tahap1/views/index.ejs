@@ -1,0 +1,48 @@
+<%- include('partials/header') %>
+<section class="sampul">
+  <span class="raksasa" id="raksasa" aria-hidden="true"><%= toko.nama %></span>
+  <div class="container sampul-isi">
+    <span class="kicker">Koleksi baru</span>
+    <h1 class="judul-besar"><% toko.judul.forEach(function (t) { %><span class="baris"><span><%= t %></span></span><% }) %></h1>
+    <p class="sampul-teks"><%= toko.slogan %></p>
+    <div class="sampul-aksi">
+      <a class="btn btn-mentari btn-lg" href="/produk">Belanja sekarang</a>
+      <% if (!user) { %><a class="btn btn-garis btn-lg" href="/register">Buat akun</a><% } %>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-jalur">
+    <% const set = [].concat(toko.ticker, toko.ticker, toko.ticker); %>
+    <% for (let ulang = 0; ulang < 2; ulang++) { set.forEach(function (t) { %><span><%= t %></span><% }) } %>
+  </div>
+</div>
+
+<section class="container bagian">
+  <div class="bagian-judul">
+    <h2>Koleksi terbaru</h2>
+    <a class="tautan-panah" href="/produk">Lihat semua &rarr;</a>
+  </div>
+  <% if (!produk.length) { %>
+    <div class="kosong">
+      <p>Belum ada produk di toko.</p>
+      <% if (user && (user.role === 'admin' || user.role === 'seller')) { %><a href="/admin/produk/baru" class="btn btn-mentari">Tambah produk pertama</a><% } %>
+    </div>
+  <% } else { %>
+    <div class="row row-cols-2 row-cols-md-4 g-3">
+      <% produk.forEach(function (p) { %><div class="col"><%- include('partials/kartu', { p }) %></div><% }) %>
+    </div>
+  <% } %>
+</section>
+
+<section class="container bagian" id="cara-belanja">
+  <div class="bagian-judul"><h2>Cara belanja</h2></div>
+  <ol class="langkah">
+    <li><span class="no">01</span><strong>Buat akun</strong><p>Isi nama, email, alamat, dan password.</p></li>
+    <li><span class="no">02</span><strong>Pilih barang</strong><p>Masukkan ke keranjang, pilih pengiriman, lalu checkout.</p></li>
+    <li><span class="no">03</span><strong>Transfer dan unggah bukti</strong><p>Foto bukti transfer diunggah di halaman pesanan.</p></li>
+    <li><span class="no">04</span><strong>Tunggu dan terima</strong><p>Pembayaran diperiksa, barang dikirim, lalu konfirmasi saat tiba.</p></li>
+  </ol>
+</section>
+<%- include('partials/footer') %>

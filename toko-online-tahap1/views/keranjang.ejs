@@ -1,0 +1,46 @@
+<%- include('partials/header') %>
+<section class="container belanja">
+  <h1>Keranjang belanja</h1>
+  <% if (!items.length) { %>
+    <div class="kosong"><p>Keranjang Anda masih kosong.</p><a href="/produk" class="btn btn-mentari">Lihat produk</a></div>
+  <% } else { %>
+  <div class="table-responsive">
+    <table class="table align-middle tabel-admin">
+      <thead><tr><th>Produk</th><th>Harga</th><th>Jumlah</th><th>Subtotal</th><th></th></tr></thead>
+      <tbody>
+      <% items.forEach(({ p, qty, sub }) => { %>
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <% if (p.gambar) { %><img class="mini" src="/uploads/<%= p.gambar %>" alt=""><% } else { %><div class="mini tanpa-foto"></div><% } %>
+              <a href="/produk/<%= p.id %>" class="fw-semibold"><%= p.nama %></a>
+            </div>
+          </td>
+          <td><%= rupiah(p.harga) %></td>
+          <td>
+            <form method="post" action="/keranjang/ubah/<%= p.id %>" class="d-flex gap-1">
+              <label class="visually-hidden" for="q<%= p.id %>">Jumlah <%= p.nama %></label>
+              <input id="q<%= p.id %>" name="qty" type="number" min="0" max="<%= p.stok %>" value="<%= qty %>" class="form-control qty">
+              <button class="btn btn-sm btn-garis">Ubah</button>
+            </form>
+            <small class="text-muted">Stok <%= p.stok %></small>
+          </td>
+          <td class="fw-semibold"><%= rupiah(sub) %></td>
+          <td>
+            <form method="post" action="/keranjang/hapus/<%= p.id %>"><button class="btn btn-sm btn-bahaya">Hapus</button></form>
+          </td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <div class="total-baris">
+    <span>Total</span><strong><%= rupiah(total) %></strong>
+  </div>
+  <div class="d-flex flex-wrap gap-2 mt-3">
+    <a href="/produk" class="btn btn-garis">Lanjut belanja</a>
+    <a href="/checkout" class="btn btn-mentari">Checkout</a>
+  </div>
+  <% } %>
+</section>
+<%- include('partials/footer') %>

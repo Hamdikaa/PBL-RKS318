@@ -1,0 +1,89 @@
+<%- include('../partials/header') %>
+<section class="container detail">
+  <a class="kembali" href="/produk">&larr; Semua produk</a>
+  <div class="row g-4 mt-1">
+    <div class="col-md-5">
+      <% if (p.gambar) { %>
+        <img class="foto-besar" src="/uploads/<%= p.gambar %>" alt="<%= p.nama %>">
+      <% } else { %>
+        <div class="foto-besar tanpa-foto" role="img" aria-label="Belum ada foto"></div>
+      <% } %>
+    </div>
+    <div class="col-md-7">
+      <% if (p.kategori) { %><span class="kat"><%= p.kategori %></span><% } %>
+      <h1><%= p.nama %></h1>
+      <% if (p.penjual) { %><p class="text-muted mb-1">Dijual oleh <%= p.penjual %></p><% } %>
+      <a class="rating-ringkas" href="#ulasan">
+        <% if (p.jml > 0) { %><span class="bintang" aria-hidden="true"><%= bintang(p.rata) %></span> <strong><%= p.rata %></strong> dari 5 (<%= p.jml %> ulasan)
+        <% } else { %>Belum ada ulasan<% } %>
+      </a>
+      <p class="harga-besar"><%= rupiah(p.harga) %></p>
+      <p>
+        <% if (p.stok <= 0) { %><span class="badge text-bg-secondary">Stok habis</span>
+        <% } else { %><span class="badge <%= p.stok <= 5 ? 'badge-sisa' : 'badge-stok' %>">Stok: <%= p.stok %></span><% } %>
+      </p>
+      <% if (p.deskripsi) { %><p class="deskripsi"><%= p.deskripsi %></p><% } %>
+      <% if (p.stok <= 0) { %>
+        <button class="btn btn-mentari btn-lg" disabled>Stok habis</button>
+      <% } else if (user && user.role === 'admin') { %>
+        <p class="catatan">Akun admin tidak dipakai untuk belanja.</p>
+      <% } else { %>
+        <form method="post" action="/keranjang/tambah/<%= p.id %>" class="d-flex gap-2 align-items-center flex-wrap">
+          <label for="qty" class="visually-hidden">Jumlah</label>
+          <input id="qty" name="qty" type="number" min="1" max="<%= p.stok %>" value="1" class="form-control qty">
+          <button class="btn btn-mentari btn-lg">Tambah ke keranjang</button>
+        </form>
+      <% } %>
+    </div>
+  </div>
+
+  <div id="ulasan" class="ulasan">
+    <h2>Ulasan pembeli</h2>
+
+    <% if (!user) { %>
+      <p class="catatan"><a href="/login">Masuk</a> untuk menulis ulasan.</p>
+    <% } else if (user.role === 'admin') { %>
+      <p class="catatan">Anda masuk sebagai admin. Admin dapat menghapus ulasan yang tidak pantas.</p>
+    <% } else { %>
+      <form method="post" action="/produk/<%= p.id %>/ulasan" class="form-ulasan">
+        <h3><%= milik ? 'Ubah ulasan Anda' : 'Tulis ulasan' %></h3>
+        <fieldset class="pilih-bintang">
+          <legend class="form-label">Rating</legend>
+          <% for (let i = 1; i <= 5; i++) { %>
+            <input type="radio" name="rating" id="r<%= i %>" value="<%= i %>" <%= milik && milik.rating === i ? 'checked' : '' %> required>
+            <label for="r<%= i %>"><%= i %> ★</label>
+          <% } %>
+        </fieldset>
+        <label for="komentar" class="form-label mt-3">Komentar (opsional)</label>
+        <textarea id="komentar" name="komentar" rows="3" maxlength="500" class="form-control mb-3"><%= milik ? milik.komentar : '' %></textarea>
+        <button class="btn btn-mentari"><%= milik ? 'Simpan perubahan' : 'Kirim ulasan' %></button>
+      </form>
+    <% } %>
+
+    <% if (!ulasan.length) { %>
+      <p class="catatan">Belum ada ulasan untuk produk ini.</p>
+    <% } else { %>
+      <ul class="daftar-ulasan">
+        <% ulasan.forEach(r => { %>
+          <li>
+            <div class="d-flex justify-content-between gap-2">
+              <div>
+                <strong><%= r.nama %></strong>
+                <span class="bintang" aria-hidden="true"><%= bintang(r.rating) %></span>
+                <span class="visually-hidden">Rating <%= r.rating %> dari 5</span>
+              </div>
+              <small class="text-muted"><%= tanggal(r.created_at) %></small>
+            </div>
+            <% if (r.komentar) { %><p><%= r.komentar %></p><% } %>
+            <% if (user && user.role === 'admin') { %>
+              <form method="post" action="/produk/<%= p.id %>/ulasan/<%= r.id %>/hapus" onsubmit="return confirm('Hapus ulasan ini?')">
+                <button class="btn btn-sm btn-bahaya">Hapus ulasan</button>
+              </form>
+            <% } %>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </div>
+</section>
+<%- include('../partials/footer') %>

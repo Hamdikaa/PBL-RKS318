@@ -1,0 +1,26 @@
+<%- include('../partials/header') %>
+<section class="container belanja">
+  <h1>Pesanan saya</h1>
+  <% if (!pesanan.length) { %>
+    <div class="kosong"><p>Anda belum punya pesanan.</p><a href="/produk" class="btn btn-mentari">Mulai belanja</a></div>
+  <% } else { %>
+  <div class="table-responsive">
+    <table class="table align-middle tabel-admin">
+      <thead><tr><th>No.</th><th>Tanggal</th><th>Barang</th><th>Total</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+      <% pesanan.forEach(o => { %>
+        <tr>
+          <td class="fw-semibold">#<%= o.id %></td>
+          <td><%= tanggal(o.created_at) %></td>
+          <td><%= o.jml %> barang</td>
+          <td><%= rupiah(o.total) %></td>
+          <td><span class="status st-<%= o.status %>"><%= statusLabel(o.status) %></span></td>
+          <td><a class="btn btn-sm btn-garis" href="/pesanan/<%= o.id %>">Lihat</a></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</section>
+<%- include('../partials/footer') %>

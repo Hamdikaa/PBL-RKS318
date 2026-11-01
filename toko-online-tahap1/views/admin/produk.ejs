@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+<section class="container admin">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h1 class="m-0">Kelola produk</h1>
+    <a class="btn btn-mentari" href="/admin/produk/baru">Tambah produk</a>
+  </div>
+  <% if (!produk.length) { %>
+    <div class="kosong"><p>Belum ada produk. Tambahkan produk pertama Anda.</p></div>
+  <% } else { %>
+  <div class="table-responsive">
+    <table class="table align-middle tabel-admin">
+      <thead><tr><th>Foto</th><th>Nama</th><th>Kategori</th><% if (user.role === 'admin') { %><th>Penjual</th><% } %><th>Harga</th><th>Stok</th><th></th></tr></thead>
+      <tbody>
+      <% produk.forEach(p => { %>
+        <tr>
+          <td><% if (p.gambar) { %><img class="mini" src="/uploads/<%= p.gambar %>" alt=""><% } else { %><div class="mini tanpa-foto"></div><% } %></td>
+          <td class="fw-semibold"><%= p.nama %></td>
+          <td><%= p.kategori || '-' %></td>
+          <% if (user.role === 'admin') { %><td><%= p.penjual || '-' %></td><% } %>
+          <td><%= rupiah(p.harga) %></td>
+          <td><%= p.stok %></td>
+          <td class="text-nowrap">
+            <a class="btn btn-sm btn-garis" href="/admin/produk/<%= p.id %>/edit">Ubah</a>
+            <form class="d-inline" method="post" action="/admin/produk/<%= p.id %>/hapus" onsubmit="return confirm('Hapus produk ini?')">
+              <button class="btn btn-sm btn-bahaya">Hapus</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</section>
+<%- include('../partials/footer') %>

@@ -1,0 +1,65 @@
+<%- include('../partials/header') %>
+<% const dasar = { q, kategori: kat, min, max, urut };
+   const link = (o = {}) => '/produk?' + new URLSearchParams(Object.fromEntries(
+     Object.entries({ ...dasar, ...o }).filter(([k, v]) => v !== '' && v !== null && !(k === 'urut' && v === 'terbaru')))); %>
+<section class="container katalog">
+  <h1>Produk</h1>
+  <form class="saring-produk" method="get" action="/produk" role="search">
+    <div class="kolom-cari">
+      <label for="q" class="form-label">Cari produk</label>
+      <input id="q" type="search" name="q" value="<%= q %>" class="form-control" placeholder="Nama produk">
+    </div>
+    <div>
+      <label for="min" class="form-label">Harga min</label>
+      <input id="min" type="number" min="0" name="min" value="<%= min %>" class="form-control" placeholder="0">
+    </div>
+    <div>
+      <label for="max" class="form-label">Harga maks</label>
+      <input id="max" type="number" min="0" name="max" value="<%= max %>" class="form-control" placeholder="Tanpa batas">
+    </div>
+    <div>
+      <label for="urut" class="form-label">Urutkan</label>
+      <select id="urut" name="urut" class="form-select">
+        <option value="terbaru" <%= urut === 'terbaru' ? 'selected' : '' %>>Terbaru</option>
+        <option value="termurah" <%= urut === 'termurah' ? 'selected' : '' %>>Harga termurah</option>
+        <option value="termahal" <%= urut === 'termahal' ? 'selected' : '' %>>Harga termahal</option>
+        <option value="rating" <%= urut === 'rating' ? 'selected' : '' %>>Rating tertinggi</option>
+      </select>
+    </div>
+    <% if (kat) { %><input type="hidden" name="kategori" value="<%= kat %>"><% } %>
+    <div class="align-self-end"><button class="btn btn-mentari">Terapkan</button></div>
+  </form>
+
+  <% if (kategori.length) { %>
+  <div class="chip-baris">
+    <a class="chip <%= !kat ? 'aktif' : '' %>" href="<%= link({ kategori: '' }) %>">Semua</a>
+    <% kategori.forEach(k => { %>
+      <a class="chip <%= kat === k ? 'aktif' : '' %>" href="<%= link({ kategori: k }) %>"><%= k %></a>
+    <% }) %>
+  </div>
+  <% } %>
+
+  <% if (!produk.length) { %>
+    <div class="kosong">
+      <p><%= (q || kat || min !== '' || max !== '') ? 'Tidak ada produk yang cocok dengan filter ini.' : 'Belum ada produk di toko.' %></p>
+      <% if (q || kat || min !== '' || max !== '') { %><a href="/produk" class="btn btn-garis">Hapus semua filter</a><% } %>
+    </div>
+  <% } else { %>
+    <p class="text-muted"><%= total %> produk</p>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+      <% produk.forEach(p => { %>
+        <div class="col">
+          <%- include('../partials/kartu', { p }) %>
+        </div>
+      <% }) %>
+    </div>
+    <% if (halaman > 1) { %>
+      <nav class="halaman" aria-label="Halaman">
+        <% for (let i = 1; i <= halaman; i++) { %>
+          <a class="<%= i === page ? 'aktif' : '' %>" href="<%= link({ page: i }) %>"><%= i %></a>
+        <% } %>
+      </nav>
+    <% } %>
+  <% } %>
+</section>
+<%- include('../partials/footer') %>

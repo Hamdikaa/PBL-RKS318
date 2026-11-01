@@ -1,0 +1,37 @@
+/* Katalog */
+.katalog { padding: 2rem 0 3rem; }
+.katalog h1, .admin h1 { font-weight: 800; }
+.cari { display: flex; gap: .5rem; max-width: 28rem; margin: 1rem 0; }
+.chip-baris { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.2rem; }
+.chip { padding: .3rem .9rem; border-radius: 2rem; border: 2px solid var(--mentari); color: var(--tinta); text-decoration: none; font-weight: 600; font-size: .92rem; }
+.chip:hover { background: var(--fajar); }
+.chip.aktif { background: var(--emas); border-color: var(--emas); }
+
+.kartu-produk { height: 100%; background: var(--putih); border: 1px solid #FFE0A6; border-radius: .75rem; overflow: hidden; display: flex; flex-direction: column; }
+.kartu-produk img, .tanpa-foto { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+.tanpa-foto { background: radial-gradient(circle at 50% 100%, var(--emas) 0 30%, var(--mentari) 30% 48%, var(--jingga) 48% 66%, var(--fajar) 66%); }
+.kartu-produk .isi { padding: .8rem; }
+.kartu-produk .kat { font-size: .8rem; color: #8A5A00; }
+.kartu-produk h2 { font-size: 1rem; font-weight: 700; margin: .15rem 0 .4rem; font-family: 'Nunito Sans', sans-serif; }
+.kartu-produk .harga { font-weight: 800; color: var(--merah); margin: 0 0 .3rem; }
+.badge-sisa { background: var(--mentari); color: var(--tinta); }
+
+.halaman { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; margin-top: 2rem; }
+.halaman a { min-width: 2.4rem; text-align: center; padding: .4rem .6rem; border: 2px solid var(--mentari); border-radius: .5rem; color: var(--tinta); text-decoration: none; font-weight: 600; }
+.halaman a.aktif { background: var(--jingga); border-color: var(--jingga); }
+
+.kosong { padding: 3rem 1rem; text-align: center; background: var(--fajar); border-radius: .75rem; }
+
+/* Admin */
+.admin { padding: 2rem 0 3rem; }
+.ringkas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.ringkas div { border-left: 6px solid var(--jingga); padding: .2rem 1rem; }
+.ringkas dt { font-weight: 600; }
+.ringkas dd { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 2.2rem; margin: 0; }
+@media (min-width: 768px) { .ringkas { grid-template-columns: repeat(4, 1fr); } }
+.tabel-admin th { background: var(--fajar); }
+.mini { width: 3rem; height: 3rem; object-fit: cover; border-radius: .4rem; display: inline-block; }
+.btn-bahaya { border: 2px solid var(--merah); color: var(--merah); background: transparent; font-weight: 600; }
+.btn-bahaya:hover { background: var(--merah); color: var(--putih); }
+.form-produk { max-width: 36rem; }
+.badge-stok { background: var(--fajar); color: var(--tinta); font-weight: 600; }

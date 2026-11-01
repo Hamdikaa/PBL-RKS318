@@ -1,0 +1,8 @@
+<% if (user) { %>
+  <a class="tautan-akun" href="/profil"><% if (user.avatar) { %><img class="avatar-kecil" src="/uploads/<%= user.avatar %>" alt=""><% } else { %><span class="avatar-kecil inisial" aria-hidden="true"><%= user.nama.charAt(0).toUpperCase() %></span><% } %><%= user.nama %></a>
+  <% if (user.role !== 'admin') { %><a href="/pesanan">Pesanan</a><% } %>
+  <form action="/logout" method="post"><button class="tautan-tombol">Keluar</button></form>
+<% } else { %>
+  <a href="/login">Masuk</a>
+  <a class="btn-kecil" href="/register">Daftar</a>
+<% } %>
